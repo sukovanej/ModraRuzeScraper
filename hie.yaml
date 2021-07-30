@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "ModraRuzeScraper:lib"
+
+    - path: "./app/Main.hs"
+      component: "ModraRuzeScraper:exe:ModraRuzeScraper-exe"
+
+    - path: "./app/Paths_ModraRuzeScraper.hs"
+      component: "ModraRuzeScraper:exe:ModraRuzeScraper-exe"
+
+    - path: "./test"
+      component: "ModraRuzeScraper:test:ModraRuzeScraper-test"
