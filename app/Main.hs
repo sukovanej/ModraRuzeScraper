@@ -1,7 +1,7 @@
 module Main where
 
 import Data.List
-import Lib (Day (Day), Meal (Meal), TimeRange (TimeRange), allLunches)
+import Scraper (Day (..), Meal (..), TimeRange (..), allLunches)
 
 main :: IO ()
 main = do

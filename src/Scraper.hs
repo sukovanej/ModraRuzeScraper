@@ -1,19 +1,27 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Lib
+module Scraper
   ( allLunches,
     TimeFrom,
     TimeTo,
-    TimeRange (TimeRange),
+    TimeRange (..),
     MealName,
     MealPrice,
-    Meal (Meal),
+    Meal (..),
     Date,
-    Day (Day),
+    Day (..),
   )
 where
 
 import Text.HTML.Scalpel
+  ( Scraper,
+    chroots,
+    hasClass,
+    scrapeURL,
+    text,
+    (//),
+    (@:),
+  )
 
 type TimeFrom = Int
 
@@ -38,7 +46,7 @@ data Day = Day Date TimeRange [Meal]
 --
 
 convertToTimeRange :: String -> TimeRange
-convertToTimeRange x = TimeRange x
+convertToTimeRange = TimeRange
 
 allLunches :: IO (Maybe [Day])
 allLunches = scrapeURL "https://www.menicka.cz/6676-modra-ruze.html" days
