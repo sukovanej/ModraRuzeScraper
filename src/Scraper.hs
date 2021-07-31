@@ -1,18 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Scraper
-  ( allLunches,
-    TimeFrom,
-    TimeTo,
-    TimeRange (..),
-    MealName,
-    MealPrice,
-    Meal (..),
-    Date,
-    Day (..),
-  )
-where
+module Scraper (allLunches) where
 
+import Data.Text (Text)
 import Text.HTML.Scalpel
   ( Scraper,
     chroots,
@@ -22,46 +12,28 @@ import Text.HTML.Scalpel
     (//),
     (@:),
   )
-
-type TimeFrom = Int
-
-type TimeTo = Int
-
-data TimeRange = TimeRange String -- TimeRange TimeFrom TimeTo
-  deriving (Show, Eq)
-
-type MealName = String
-
-type MealPrice = String -- TODO: to string
-
-data Meal = Meal MealName MealPrice
-  deriving (Show, Eq)
-
-type Date = String
-
-data Day = Day Date TimeRange [Meal]
-  deriving (Show, Eq)
+import Types (Day (..), Meal (..), TimeRange (..))
 
 -- selector : #menicka > div > div.text > div.profile > div.obsah > div:nth-child(3)
 --
 
-convertToTimeRange :: String -> TimeRange
+convertToTimeRange :: Text -> TimeRange
 convertToTimeRange = TimeRange
 
 allLunches = scrapeURL "https://www.menicka.cz/6676-modra-ruze.html" days
   where
-    days :: Scraper String [Day]
+    days :: Scraper Text [Day]
     days = do
       chroots ("div" @: [hasClass "menicka"]) day
 
-    day :: Scraper String Day
+    day :: Scraper Text Day
     day = do
       timerange <- text $ "div" @: [hasClass "obedovycas"]
       meals <- chroots ("ul" // "li" @: [hasClass "jidlo"]) meal
       date <- text $ "div" @: [hasClass "nadpis"]
       return $ Day date (convertToTimeRange timerange) meals
 
-    meal :: Scraper String Meal
+    meal :: Scraper Text Meal
     meal = do
       name <- text $ "div" @: [hasClass "polozka"]
       price <- text $ "div" @: [hasClass "cena"]

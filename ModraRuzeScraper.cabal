@@ -25,16 +25,18 @@ source-repository head
 
 library
   exposed-modules:
+      Formatter
       Scraper
       Slack
+      Types
   other-modules:
       Paths_ModraRuzeScraper
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
-    , http-client
     , http-conduit
     , scalpel
     , text
@@ -49,9 +51,9 @@ executable ModraRuzeScraper-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       ModraRuzeScraper
+    , aeson
     , base >=4.7 && <5
     , bytestring
-    , http-client
     , http-conduit
     , scalpel
     , text
@@ -67,9 +69,9 @@ test-suite ModraRuzeScraper-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       ModraRuzeScraper
+    , aeson
     , base >=4.7 && <5
     , bytestring
-    , http-client
     , http-conduit
     , scalpel
     , text

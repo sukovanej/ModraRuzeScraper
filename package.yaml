@@ -25,6 +25,7 @@ dependencies:
 - scalpel
 - http-conduit
 - bytestring
+- aeson
 
 library:
   source-dirs: src
