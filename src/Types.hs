@@ -6,12 +6,12 @@ type TimeFrom = Int
 
 type TimeTo = Int
 
-data TimeRange = TimeRange Text -- TimeRange TimeFrom TimeTo
+data TimeRange = TimeRange Text -- TODO: TimeRange TimeFrom TimeTo
   deriving (Show, Eq)
 
 type MealName = Text
 
-type MealPrice = Text -- TODO: to string
+type MealPrice = Text -- TODO: to number
 
 data Meal = Meal MealName MealPrice
   deriving (Show, Eq)
