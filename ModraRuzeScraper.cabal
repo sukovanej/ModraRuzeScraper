@@ -33,9 +33,10 @@ library
       src
   build-depends:
       base >=4.7 && <5
-    , mtl
+    , bytestring
+    , http-client
+    , http-conduit
     , scalpel
-    , slack-web
     , text
   default-language: Haskell2010
 
@@ -49,9 +50,10 @@ executable ModraRuzeScraper-exe
   build-depends:
       ModraRuzeScraper
     , base >=4.7 && <5
-    , mtl
+    , bytestring
+    , http-client
+    , http-conduit
     , scalpel
-    , slack-web
     , text
   default-language: Haskell2010
 
@@ -66,8 +68,9 @@ test-suite ModraRuzeScraper-test
   build-depends:
       ModraRuzeScraper
     , base >=4.7 && <5
-    , mtl
+    , bytestring
+    , http-client
+    , http-conduit
     , scalpel
-    , slack-web
     , text
   default-language: Haskell2010

@@ -2,13 +2,20 @@
 
 module Slack (sendSlackMessage) where
 
-import Control.Monad.Reader (ReaderT (runReaderT))
-import Data.Text (Text)
-import Web.Slack (chatPostMessage, mkSlackConfig)
-import Web.Slack.Chat (PostMsgRsp, mkPostMsgReq)
-import Web.Slack.Common (SlackClientError)
+import Data.ByteString.Char8 (pack)
+import Network.HTTP.Conduit
 
-sendSlackMessage :: Text -> Text -> Text -> IO (Either SlackClientError PostMsgRsp)
+sendSlackMessage :: String -> String -> String -> IO ()
 sendSlackMessage token channel message = do
-  slackConfig <- mkSlackConfig token
-  runReaderT (chatPostMessage $ mkPostMsgReq channel message) slackConfig
+  request' <- parseRequest "https://slack.com/api/chat.postMessage"
+  let json = "{channel: \"" ++ channel ++ "\", text: \"" ++ message ++ "\"}"
+  print json
+  let request =
+        request'
+          { method = "POST",
+            requestHeaders = [("Authorization", pack $ "Bearer " ++ token), ("Content-Type", "application/json")],
+            requestBody = RequestBodyBS . pack $ json
+          }
+  manager <- newManager tlsManagerSettings
+  res <- httpLbs request manager
+  print res

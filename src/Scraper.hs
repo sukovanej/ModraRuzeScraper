@@ -48,7 +48,6 @@ data Day = Day Date TimeRange [Meal]
 convertToTimeRange :: String -> TimeRange
 convertToTimeRange = TimeRange
 
-allLunches :: IO (Maybe [Day])
 allLunches = scrapeURL "https://www.menicka.cz/6676-modra-ruze.html" days
   where
     days :: Scraper String [Day]
