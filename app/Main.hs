@@ -14,7 +14,7 @@ main = do
   token <- getEnv "SLACK_API_TOKEN"
   lunches <- allLunches
   let formattedLunches = formatLunches lunches
-  print formattedLunches
   putStrLn "lunches fetched"
-  sendSlackMessage token "gay-sex" formattedLunches
-  putStrLn "slack notified"
+  print formattedLunches
+  -- sendSlackMessage token "gay-sex" formattedLunches
+  -- putStrLn "slack notified"
