@@ -2,26 +2,24 @@
 
 module Main where
 
-import Data.Text (Text, intercalate, pack)
-import Formatter (formatLunches)
-import Scraper (allLunches)
-import Slack (sendSlackMessage)
-import System.Environment (getEnv, getArgs)
-import Types (Day (..), Meal (..), TimeRange (..))
-import Control.Monad (when)
+import Api (runApi)
+import Data.Text (pack)
+import Environment (Environment (Environment))
+import Run (run)
+import System.Environment (getArgs, getEnv)
 
 main :: IO ()
 main = do
-  token <- getEnv "SLACK_API_TOKEN"
+  token <- pack <$> getEnv "SLACK_API_TOKEN"
   slackChannel <- pack <$> getEnv "SLACK_CHANNEL"
+  port <- read <$> getEnv "PORT"
   args <- getArgs
 
-  lunches <- allLunches
-  let formattedLunches = formatLunches lunches
-  putStrLn "lunches fetched"
-  print formattedLunches
+  let shouldNotifySlack = "--notify-slack" `elem` args
+  let shouldRunApi = "--api" `elem` args
 
-  when ("--notify-slack" `elem` args) $
-    do
-      sendSlackMessage token slackChannel formattedLunches
-      putStrLn "slack notified"
+  let environment = Environment token slackChannel shouldNotifySlack port
+
+  if shouldRunApi
+    then runApi environment
+    else run environment

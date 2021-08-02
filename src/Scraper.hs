@@ -20,6 +20,7 @@ import Types (Day (..), Meal (..), TimeRange (..))
 convertToTimeRange :: T.Text -> TimeRange
 convertToTimeRange = TimeRange . T.drop 6
 
+allLunches :: IO (Maybe [Day])
 allLunches = scrapeURL "https://www.menicka.cz/6676-modra-ruze.html" days
   where
     days :: Scraper T.Text [Day]

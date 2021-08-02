@@ -10,9 +10,9 @@ import Data.Aeson
     encode,
     genericToEncoding,
   )
-import Data.ByteString.Char8 (pack)
 import Data.ByteString.Lazy (toStrict)
 import Data.Text (Text)
+import Data.Text.Encoding (encodeUtf8)
 import GHC.Generics (Generic)
 import Network.HTTP.Conduit
   ( Request (method, requestBody, requestHeaders),
@@ -23,18 +23,18 @@ import Network.HTTP.Conduit
     tlsManagerSettings,
   )
 
-data Person = Person {channel :: Text, text :: Text} deriving (Generic, Show)
+data SlackPostMessage = SlackPostMessage {channel :: Text, text :: Text} deriving (Generic, Show)
 
-instance ToJSON Person where
+instance ToJSON SlackPostMessage where
   toEncoding = genericToEncoding defaultOptions
 
-instance FromJSON Person
+instance FromJSON SlackPostMessage
 
-sendSlackMessage :: String -> Text -> Text -> IO ()
+sendSlackMessage :: Text -> Text -> Text -> IO ()
 sendSlackMessage token channel message = do
   request' <- parseRequest "https://slack.com/api/chat.postMessage"
-  let json = encode $ Person channel message
-  let headers = [("Authorization", pack $ "Bearer " ++ token), ("Content-Type", "application/json")]
+  let json = encode $ SlackPostMessage channel message
+  let headers = [("Authorization", encodeUtf8 $ "Bearer " <> token), ("Content-Type", "application/json")]
   print json
   let request = request' {method = "POST", requestHeaders = headers, requestBody = RequestBodyBS $ toStrict json}
   manager <- newManager tlsManagerSettings
