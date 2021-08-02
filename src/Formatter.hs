@@ -1,16 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Formatter (formatLunches) where
+module Formatter (formatLunch) where
 
-import Data.Text (Text, intercalate)
-import Types (Day (..), Meal (..), TimeRange (TimeRange))
+import Data.Text (Text, intercalate, pack)
+import Types (Day (..), Meal (..))
 
-formatLunches :: Maybe [Day] -> Text
-formatLunches Nothing = "Nothing :("
-formatLunches (Just x) = intercalate "\n" $ map showDay x
-
-showDay :: Day -> Text
-showDay (Day date (TimeRange timerange) meals) = mconcat [date, " (", timerange, ")\n", showMeals meals]
+formatLunch :: Day -> Text
+formatLunch (Day date meals) = mconcat [date, "\n", showMeals meals]
 
 showMeals :: [Meal] -> Text
 showMeals = intercalate "\n" . map showMeal

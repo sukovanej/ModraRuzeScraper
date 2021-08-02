@@ -12,30 +12,34 @@ import Text.HTML.Scalpel
     (//),
     (@:),
   )
-import Types (Day (..), Meal (..), TimeRange (..))
+import Types (Day (..), Meal (..))
 
--- selector : #menicka > div > div.text > div.profile > div.obsah > div:nth-child(3)
---
-
-convertToTimeRange :: T.Text -> TimeRange
-convertToTimeRange = TimeRange . T.drop 6
+hackyFixEncoding :: T.Text -> T.Text
+hackyFixEncoding = T.map encode
+  where
+    encode '\218' = 'Ú'
+    encode '\253' = 'ý'
+    encode '\232' = 'č'
+    encode '\248' = 'ř'
+    encode '\236' = 'ě'
+    encode '\158' = 'ž'
+    encode c = c
 
 allLunches :: IO (Maybe [Day])
 allLunches = scrapeURL "https://www.menicka.cz/6676-modra-ruze.html" days
   where
     days :: Scraper T.Text [Day]
     days = do
-      chroots ("div" @: [hasClass "menicka"]) day
+      chroots ("div" @: [hasClass "obsah"] // "div" @: [hasClass "menicka"]) day
 
     day :: Scraper T.Text Day
     day = do
-      timerange <- text $ "div" @: [hasClass "obedovycas"]
       meals <- chroots ("ul" // "li" @: [hasClass "jidlo"]) meal
       date <- text $ "div" @: [hasClass "nadpis"]
-      return $ Day date (convertToTimeRange timerange) meals
+      return $ Day (hackyFixEncoding date) meals
 
     meal :: Scraper T.Text Meal
     meal = do
       name <- text $ "div" @: [hasClass "polozka"]
       price <- text $ "div" @: [hasClass "cena"]
-      return $ Meal name price
+      return $ Meal (hackyFixEncoding name) (hackyFixEncoding price)

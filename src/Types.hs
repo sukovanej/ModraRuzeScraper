@@ -1,13 +1,10 @@
-module Types (TimeFrom, TimeTo, TimeRange (..), Meal (..), Date, Day (..)) where
+module Types (TimeFrom, TimeTo, Meal (..), Date, Day (..)) where
 
 import Data.Text (Text)
 
 type TimeFrom = Int
 
 type TimeTo = Int
-
-data TimeRange = TimeRange Text -- TODO: TimeRange TimeFrom TimeTo
-  deriving (Show, Eq)
 
 type MealName = Text
 
@@ -18,5 +15,5 @@ data Meal = Meal MealName MealPrice
 
 type Date = Text
 
-data Day = Day Date TimeRange [Meal]
+data Day = Day Date [Meal]
   deriving (Show, Eq)
